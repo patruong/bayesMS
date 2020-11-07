@@ -384,6 +384,21 @@ summary {
 <p><a href="https://pubmed.ncbi.nlm.nih.gov/30482846/">Triqler</a> is a novel software for protein quantification and differential protein identification. It uses probabilistic graphical models to generate posterior distributions for fold changes between treatment groups, highlighting uncertainty rather than hiding it. Conventional (frequentist) methods use filters and imputations to control error rate and often ignore certain error sources. This project aims to benchmark Triqler against MaxQuant (A commonly used tool for protein quantification).</p>
 <p>For this purpose, a data set with 10 samples containing mixtures of Arabidopsis Thaliana, Caenorhabditis Elegans and Homo Sapiens proteins are used. The concentration levels are known. Theoretically, the results from Triqler should be more representative of the de facto protein quantification, since no filters or imputations methods are used, but previous attempts at showing this fact (<a href="https://patruong.github.io/bayesProtQuant/">here</a>) have shown that imputation methods could severely impact the results obtained by MaxQuant, making it look either much worse or much better by giving it an unfair advantage or disadvantage. One important aspect of this research is therefore how to make a fair comparison of Triqler and MaxQuant. Sub-tasks to answer relating to this aspect is “How do we make a fair imputation if we need to impute values?” and “How do we visualize the comparison in a meaningful and comprehensible way?”.</p>
 </div>
+<div id="saturday" class="section level2">
+<h2>2020-11-07 Saturday</h2>
+<div id="targeted-proteomics." class="section level3">
+<h3>Targeted proteomics.</h3>
+</div>
+</div>
+<div id="friday" class="section level2">
+<h2>2020-11-06 Friday</h2>
+<div id="data-dependent-acquisition-and-data-independent-acquisition-dia." class="section level3">
+<h3>Data-dependent Acquisition and Data Independent Acquisition (DIA).</h3>
+<p>In data-dependent acquisition (DDA), a protein sample is digested into peptides, ionized and analyzed by mass spectrometry. Peptide signals that rise above a certain treshold (noise level) in a mass spectrum are selected for fragmentation, producing tandem mass spectra (MS/MS) that can be matched to spectra in a database. The mass spectrometer randomly samples peptides for fragmentation and is biased to pick those with strongest signal, which makes it problematic to reproducibly quantify low-abundance peptides (which could hold biological value).</p>
+<p>Data-independent acquisition is an approach to acquisition in Mass Spectrometry which fragments all peptides within a defined mass-to-charge (m/z) windows (as opposed to a select narrow window around “the strongest signal”). The analysis is repeated as the mass spectrometer marches up the full m/z range, which results in accurate peptide quantificaiton without being limited to profiling predefined peptied of interest.</p>
+<p>A potential drawback of the DIA is the existence of multiple peptides in an m/z window. The fragmentation of multiple peptides results in chimeric (multiplexed) spectra which are more complex than single peptide spectra. Procedures for deconvoluting these spectra are required. Two methods for DIA are (OpenSWATH)[<a href="https://pubmed.ncbi.nlm.nih.gov/24727770/" class="uri">https://pubmed.ncbi.nlm.nih.gov/24727770/</a>] and (ISOQUANT)[<a href="https://www.nature.com/articles/nmeth.2767" class="uri">https://www.nature.com/articles/nmeth.2767</a>].</p>
+</div>
+</div>
 <div id="tuesday" class="section level2">
 <h2>2020-10-20 Tuesday</h2>
 <div id="thoughts-about-how-to-approach-the-problem." class="section level3">
