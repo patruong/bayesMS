@@ -106,6 +106,7 @@ def melt_triqler_output(triq, protein_id_pep_treshold = 0.01):
     #print(end-start)
     
     melted = pd.DataFrame(vals, columns = cols)
+    melted["specie"] = melted.protein.apply(lambda x: x.split('_')[-1])
     return melted
     
     
