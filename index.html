@@ -24506,68 +24506,40 @@ Triqler seems to get less or similar differenatially expressed for ARATH.</p>
 <p>I could visualize this as matrix for all samples, where coloring of the matrix indicated which has more differentially expressed.</p>
 
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
 </div>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>Think about if we should remove proteins that have not been discovered in different runs from spec...</p>
 
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h3 id="2020-12-18-Todo-after-friday-meeting.">2020-12-18 Todo after friday meeting.<a class="anchor-link" href="#2020-12-18-Todo-after-friday-meeting.">&#182;</a></h3><ul>
+<li>Check Tenzer data set.</li>
+<li>Download ENSEMBL (Uniprot) data set.</li>
+<li>Download SWISS (Uniprot) data set.</li>
+<li>Check proteoform inference in Matthew's article about iPRG2016.</li>
+<li>Get EncyclopeDIA running on data sets.</li>
+<li>Get Triqler running on data sets.</li>
+<li>Think about what database Roland should use perform experiments for a fair comparison with triqler.</li>
+<li>Make project description more neutral. </li>
+<li>Change project description from protein quantification to protein summarization (?)</li>
+</ul>
+<p>Meeting notes</p>
+<p>Project description is too loaded. It needs to be more neutral.</p>
+<p>Problems in benchmarking is not protein inference. We need to remove this part from any Triqler benchmarking. There are two approaches to how to treat proteoforms.</p>
+<ul>
+<li>If any proteoform is prevalent; the protein is assumed to exist (will id. too many proteins).</li>
+<li>If require more evidence for protein for it to be counted as identified (will be more conservative).</li>
+</ul>
+<p>Triqler works on the conservative principle. Therefore, we need to have a database with less proteoforms for any comparison to be fair.</p>
+<p>Get encyclopeDIA working, get results and remove protein inference step from encyclopedia and run Triqler from this step.</p>
+<p>I need to run the whole thing for my own to know the process.</p>
+<p>TIP on log-formatting: It will be much easier for everybody else to read if I chunk it up to experient scripts, run scripts and write about results and discuss the results in the log. Have the experiment scripts in experiment-folder.</p>
+<p>On the FC diff. exp. comparison (2020-12-11 Cont. on diff expression). Still a good idea to do the matrix of which comparison are better for triqler and spectronaut for all cases and run, to get an overview of which methods perform better. But this is not priority at this moment.</p>
 
-     </div>
 </div>
-</div>
-</div>
-
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
