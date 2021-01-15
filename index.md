@@ -8433,6 +8433,39 @@ Install pyprophet on python 2 environment.
 
 anaconda3/envs/py27/bin/pyprophet --help
 
+## 2021-01-14
+
+Have gotten OpenSWATH to work on PASS00779 dataset.
+
+Looking into BiblioSpec for spectral library build (How does this work?)
+Looking into TPP Spectrast for spectra library build (Could not get TPP working correctly)
+Looking into Mascot, SEQUEST for PSM (They seems to be proprietary)
+
+Looking into the data set: I have choosen HYE124_TTOF6600_32fix data set because they seem to be the smallest data set with least dissimilar proportion between mixtures (65 % HUMAN, 20 % E.Coli, 15 % Yeast). 
+
+
+Steps for building spectral library
+.raw --> convert [MSConvert] to .mzML --> peptide spectral matching and protein identification (Crux-pipeline [Crux Bullseye --> Crux Comet/Tide search --> Crux Percolator]) --> BiblioSpec.
+
+NOTE: files need to be renamed so that they do not have spaces before Crux can be run properly (I got stuck in this for a while).
+
+I am currently running the Crux Bullseye on .mzML data. It seems to take about 2.5-3h for each .mzML file. 
+
+Some Thoughts for meeting tomorrow:
+
+- Tenzer data is big, Bruderer data is even bigger. Steps in pipeline take quite some time. How would be a smart way to work with the data, which data set to chose? Does it even matter?
+
+Does it matter if TTOF6600, TTOF5600+ machine? 64 variable window size for SWATH vs 32 fixed window sized?
+
+Does it matter which database search engine is used for peptide spectrum matches and protein identification (PSM)? 
+
+Skyline can build spectral library (https://skyline.ms/_webdav/home/software/Skyline/%40files/tutorials/MethodEdit-20_1.pdf). But does not support tide-search format. So will use the comet formatting.
+
+When this is done, everything else should work. 
+
+How do i get BlibBuild working.
+
+
 
 
 
