@@ -8465,7 +8465,72 @@ When this is done, everything else should work.
 
 How do i get BlibBuild working.
 
+## 2021-01-15
 
+Meeting with Lukas.
+
+Looking into how to build spectra libraries again. 
+
+How to build spectral library from SPECTRAL LIBRARY GENERATION segment in this tutorial (http://openswath.org/en/latest/docs/tpp.html#id4).
+
+Looking into Trans-Proteomic Pipeline.
+
+Building the Trans-Proteomic Pipeline by following this tutorial (http://tools.proteomecenter.org/wiki/index.php?title=TPP_5.2.0:_Installing_on_Ubuntu_18.04_LTS).
+
+Everything worked until 
+```
+export PERL_MM_USE_DEFAULT=1
+yes | sudo cpan install CGI
+sudo cpan install XML::Parser
+sudo cpan install FindBin::libs
+yes | sudo cpan install JSON
+
+
+cd /usr/local/tpp/bin
+export PERL5LIB=/usr/local/tpp/lib/perl
+./test_tpi.pl
+
+(base) ptruong@planck:/usr/local/tpp/bin$ ./test_tpi.pl
+Testing CGI.............................ok
+Testing CGI::Carp.......................ok
+Testing Cwd.............................ok
+Testing Data::Dumper....................ok
+Testing Digest::MD5.....................ok
+Testing DirHandle.......................ok
+Testing Fcntl...........................ok
+Testing File::Basename..................ok
+Testing File::Copy......................ok
+Testing File::Path......................ok
+Testing File::Spec......................ok
+Testing File::Spec::Functions...........ok
+Testing File::Spec::Win32...............ok
+Testing File::Temp......................ok
+Testing FindBin.........................ok
+Testing FindBin::libs...................NOT FOUND!  Please check installation.
+Testing Getopt::Long....................ok
+Testing Getopt::Std.....................ok
+Testing HTML::Entities..................ok
+Testing IO::Compress::Zip...............ok
+Testing JSON............................ok
+Testing LWP::Simple.....................ok
+Testing Pod::Usage......................ok
+Testing POSIX...........................ok
+Testing Test::More......................ok
+Testing Tie::File.......................ok
+Testing TPP.............................ok
+Testing tpplib_perl.....................ok
+Testing TPP::StatUtilities..............ok
+Testing Win32...........................skipped
+Testing Win32::GUI......................skipped
+Testing Win32::GuiTest..................skipped
+Testing Win32::Service..................skipped
+Testing Win32::SysTray..................skipped
+Testing XML::Parser.....................ok
+29 modules installed, 5 skipped, 1 NOT installed
+
+```
+
+We don't have FindBin::libs. I will need to check how to install this tonight.
 
 
 
