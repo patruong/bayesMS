@@ -8528,9 +8528,217 @@ Testing Win32::SysTray..................skipped
 Testing XML::Parser.....................ok
 29 modules installed, 5 skipped, 1 NOT installed
 
-```
 
 We don't have FindBin::libs. I will need to check how to install this tonight.
+
+### 2020-01-18
+
+sudo cpan install FindBin::libs
+
+Installed FindBin::libs
+
+Now installation of TPP should be done.
+
+In http://openswath.org/en/latest/docs/tpp.html.
+
+Following line:
+
+Please follow the tutorial until the generation of SpectraST spectral libraries. If you are using DIA data, follow the DIA-Umpire tutorial to generate pseudo-spectra first, which can then be processed using the TPP.
+
+Does this mean that we can generate spectral library from DIA data as well... I should check this.
+
+According to [Yang et al. 2020](https://www.nature.com/articles/s41467-019-13866-z) spectral library can be generated from DIA-data. SHould check this laters.
+
+... Some .md notes lost because forgot to save .md file and closed terminal.
+
+### 2020-01-19.
+
+... Some .md notes lost because forgot to save .md file and closed terminal.
+
+Have been trying to get spectraST. I can't figure out which file to use from crux-output, so have tried to run comet from tpp.
+
+The process for generating spectral library...
+
+Comet works but on HeLa_007.mzML pep.xml output I get the following error:
+
+(base) ptruong@planck:~/git/bayesMS/data/datasets/PXD002952/ftp.pride.ebi.ac.uk/pride/data/archive/2016/09/PXD002952/convert/dda/mzml/HeLa_007$ PeptideProphetParser Hela_007_Rep1.pep.xml 
+ (Comet)
+init with Comet Trypsin 
+MS Instrument info: Manufacturer: UNKNOWN, Model: UNKNOWN, Ionization: UNKNOWN, Analyzer: UNKNOWN, Detector: UNKNOWN
+
+INFO: Processing standard MixtureModel ... 
+ PeptideProphet  (TPP v5.2.0 Flammagenitus, Build 201902051127-7887 (Linux-x86_64)) AKeller@ISB
+ read in 8 1+, 26899 2+, 24801 3+, 0 4+, 0 5+, 0 6+, and 0 7+ spectra.
+Initialising statistical models ...
+Iterations: .........10.........20.........
+WARNING: Mixture model quality test failed for charge (1+).
+model complete after 30 iterations
+
+
+(base) ptruong@planck:~/git/bayesMS/data/datasets/PXD002952/ftp.pride.ebi.ac.uk/pride/data/archive/2016/09/PXD002952/convert/dda/mzml/HeLa_007$ InterProphetParser Hela_007_Rep1.pep.xml iProphet.pep.xml
+Running NSS NRS NSE NSI NSM NSP FPKM Model EM:
+Computing NSS values ... 
+. done
+Computing NRS values ... 
+.........10%.........20%.........30%.........40%.........50%.........60%.........70%.........80%.........90%.........100% done
+Computing NSE values ... 
+.........10%.........20%.........30%.........40%.........50%.........60%.........70%.........80%.........90%.........100% done
+Computing NSI values ... 
+.........10%.........20%.........30%.........40%.........50%.........60%.........70%.........80%.........90%.........100% done
+Computing NSM values ... 
+.........10%.........20%.........30%.........40%.........50%.........60%.........70%.........80%.........90%.........100% done
+Computing NSP values ... 
+Creating 1 threads 
+Wait for threads to finish ...
+0--------------------------------------------------50------------------------------------------------100%
+.................................................................................................... done
+FPKM values are unavailable ... 
+Iterations: .........10.......done
+
+iProphet processed .mzML for probability assignment performed as recommended.
+
+
+(base) ptruong@planck:~/git/bayesMS/data/datasets/PXD002952/ftp.pride.ebi.ac.uk/pride/data/archive/2016/09/PXD002952/convert/dda/mzml/HeLa_007$ spectrast -cP iProphet.pep.xml 
+SpectraST started at Wed Jan 20 01:40:54 2021.
+Processing "iProphet.pep.xml"...500...1000...1500...2000...2500...3000...3500...4000...4500...5000...5500...6000...6500...7000...7500...8000...8500...9000...9500...10000...10500...11000...11500...12000...12500...13000...13500...14000...14500...15000...15500...16000...16500...17000...17500...18000...18500...19000...19500...20000...20500...21000...21500...22000...22500...23000...DONE!
+Importing all spectra with P>=0 ...10%...20%...30%...40%...50%...60%...70%...80%...90%...DONE!
+
+Library file (BINARY) "iProphet.splib" created.
+Library file (TEXT) "iProphet.sptxt" created.
+M/Z Index file "iProphet.spidx" created.
+Peptide Index file "iProphet.pepidx" created.
+
+Total number of spectra in library: 0
+Total number of distinct peptide ions in library: 0
+Total number of distinct stripped peptides in library: 0
+
+CHARGE            +1: 0 ; +2: 0 ; +3: 0 ; +4: 0 ; +5: 0 ; >+5: 0 ; Unk: 0
+TERMINI           Tryptic: 0 ; Semi-tryptic: 0 ; Non-tryptic: 0
+PROBABILITY       >0.9999: 0 ; 0.999-0.9999: 0 ; 0.99-0.999: 0 ; 0.9-0.99: 0 ; <0.9: 0
+NREPS             20+: 0 ; 10-19: 0 ; 4-9: 0 ; 2-3: 0 ; 1: 0
+MODIFICATIONS     None
+
+Total Run Time = 48 seconds.
+SpectraST finished at Wed Jan 20 01:41:42 2021 with 23144 error(s):
+...
+
+spectrast performed on the iProphet output... however 0 spectra ssem to have been generated. The output file is empty.
+
+What to do??
+
+I have tried rerunning everything many times.. without results. 
+
+I don't know how would be the smartest way to generate spectral lib from my current data set... I'm stuck this is not good. 
+
+Just noticed this snippet...
+
+...
+
+PEPXML IMPORT: Cannot find MS2+ scan #71199 in file "/home/ptruong/git/bayesMS/data/datasets/PXD002952/ftp.pride.ebi.ac.uk/pride/data/archive/2016/09/PXD002952/convert/dda/mzml/HeLa_007/crux-output/comet.mzXML". Scan not imported.
+...
+
+Perhaps the error occurs because I have not converted my .mzML to mzXML, so the spectrast cannot search?
+
+Converting .mzML to .mzXML worked.
+
+
+(base) ptruong@planck:~/git/bayesMS/data/datasets/PXD002952/ftp.pride.ebi.ac.uk/pride/data/archive/2016/09/PXD002952/convert/dda/mzml/HeLa_007/crux-output$ spectrast -cP0.9 comet.target.pep.xml 
+SpectraST started at Wed Jan 20 02:48:55 2021.
+Processing "comet.target.pep.xml"...500...1000...1500...2000...2500...3000...3500...4000...4500...5000...5500...6000...6500...7000...7500...8000...8500...9000...9500...10000...10500...11000...11500...12000...12500...13000...13500...14000...14500...15000...15500...16000...16500...DONE!
+Importing all spectra with P>=0.9 ...10%...20%...30%...40%...50%...60%...70%...80%...90%...DONE!
+
+Library file (BINARY) "comet.target.splib" created.
+Library file (TEXT) "comet.target.sptxt" created.
+M/Z Index file "comet.target.spidx" created.
+Peptide Index file "comet.target.pepidx" created.
+
+Total number of spectra in library: 8141
+Total number of distinct peptide ions in library: 7491
+Total number of distinct stripped peptides in library: 7435
+
+CHARGE            +1: 0 ; +2: 6122 ; +3: 2019 ; +4: 0 ; +5: 0 ; >+5: 0 ; Unk: 0
+TERMINI           Tryptic: 8140 ; Semi-tryptic: 1 ; Non-tryptic: 0
+PROBABILITY       >0.9999: 4670 ; 0.999-0.9999: 1068 ; 0.99-0.999: 1068 ; 0.9-0.99: 1333 ; <0.9: 2
+NREPS             20+: 0 ; 10-19: 0 ; 4-9: 0 ; 2-3: 0 ; 1: 8141
+MODIFICATIONS     C,Carbamidomethyl: 1026
+
+Total Run Time = 380 seconds.
+SpectraST finished at Wed Jan 20 02:55:15 2021 with 8551 error(s):
+PEPXML IMPORT: Cannot find MS2+ scan #156 in file "/home/ptruong/git/bayesMS/data/datasets/PXD002952/ftp.pride.ebi.ac.uk/pride/data/archive/2016/09/PXD002952/convert/dda/mzml/HeLa_007/crux-output/comet.mzXML". Scan not imported.
+PEPXML IMPORT: Cannot find MS2+ scan #185 in file "/home/ptruong/git/bayesMS/data/datasets/PXD002952/ftp.pride.ebi.ac.uk/pride/data/archive/2016/09/PXD002952/convert/dda/mzml/HeLa_007/crux-output/comet.mzXML". Scan not imported.
+PEPXML IMPORT: Cannot find MS2+ scan #263 in file "/home/ptruong/git/bayesMS/data/datasets/PXD002952/ftp.pride.ebi.ac.uk/pride/data/archive/2016/09/PXD002952/convert/dda/mzml/HeLa_007/crux-output/comet.mzXML". Scan not imported.
+...
+
+The missed PEPXML IMPORT: are mslevel=1 scans in the .mzXML file.
+
+### 2021-01-20 A lot of time spent tryin to get spectral lib file conversion.
+
+Fixed all steps for the other two mzML steps.
+
+How do we convert .splib to TraML, tsv, pqp format?
+
+Spent a couple of hours (~3hrs) on trying to looking into ConvertTSVToTraML to convert .splib to .TraML as specified in http://openswath.org/en/latest/docs/ipf_legacy.html. It turns out that ConvertTSVToTraML has deprecated and is removed since openms2.2 (https://www.openms.de/openms220/). The current version is openms2.6. 
+
+TargetFileConverter should be used instead to convert.
+
+The process is following..
+
+# This will generate the file db_assays.mrm
+spectrast -cNdb_assays -cICID-QTOF -cM db_consensus.splib
+
+TargetedFileConverter -in db_assays.mrm -out db_assays.TraML
+
+OpenSwathWorkflow -in comet.target.mzML -tr db_assays.TraML -sort_swath_maps -batchSize 1000 -out_tsv osw_output.tsv
+
+The above command worked; two thoughts - 1) iRT normalization is this needed (I should read the Tenzer paper to determine this and old notes from what is discussed with Lukas), 2) I am not using swath_windows_file at this moment. Is this needed?
+
+### 2021-01-21 
+
+Trying to get the whole pipeline working. The followning is the output.
+
+root@f2d0dc8baf00:/data/git/bayesMS/data/datasets/PXD002952/ftp.pride.ebi.ac.uk/pride/data/archive/2016/09/PXD002952/convert/dda/mzml/HeLa_007/crux-output# OpenSwathWorkflow -in comet.target.mzML -tr db_assays.TraML -sort_swath_maps -batchSize 1000 -out_tsv osw_output.tsv
+Since neither rt_norm nor tr_irt is set, OpenSWATH will not use RT-transformation (rather a null transformation will be applied)
+Progress of 'Load TraML file':
+-- done [took 1.99 s (CPU), 2.05 s (Wall)] -- 
+Loaded 259 proteins, 318 compounds with 36807 transitions.
+Loading mzML file comet.target.mzML using readoptions normal
+Progress of 'Loading metadata file comet.target.mzML':
+Will analyze the metadata first to determine the number of SWATH windows and the window sizes.
+Determined there to be 34525 SWATH windows and in total 2212 MS1 spectra
+Determined there to be 34525 SWATH windows and in total 2212 MS1 spectra
+-- done [took 22.85 s (CPU), 41.60 s (Wall)] -- 
+Progress of 'Loading data file comet.target.mzML':
+Killed
+
+root@f2d0dc8baf00:/data/git/bayesMS/data/datasets/PXD002952/ftp.pride.ebi.ac.ukroot@f2d0dc8baf00:/data/git/bayesMS/data/datasets/PXD002952/ftp.pride.ebi.ac.uk/pride/data/archive/2016/09/PXD002952/convert/dda/mzml/HeLa_007/crux-output# OpenSwathWorkflow -in comet.target.mzML -tr db_assays.TraML -sort_swath_maps -batchSize 1000 -out_tsv osw_output.tsv
+Since neither rt_norm nor tr_irt is set, OpenSWATH will not use RT-transformation (rather a null transformation will be applied)
+Progress of 'Load TraML file':
+-- done [took 1.90 s (CPU), 1.94 s (Wall)] -- 
+Loaded 259 proteins, 318 compounds with 36807 transitions.
+Loading mzML file comet.target.mzML using readoptions normal
+Progress of 'Loading metadata file comet.target.mzML':
+Will analyze the metadata first to determine the number of SWATH windows and the window sizes.
+Determined there to be 34525 SWATH windows and in total 2212 MS1 spectra
+Determined there to be 34525 SWATH windows and in total 2212 MS1 spectra
+-- done [took 24.89 s (CPU), 41.30 s (Wall)] -- 
+Progress of 'Loading data file comet.target.mzML':
+Read chromatogram while reading SWATH files, did not expect that!
+
+  -- done [took 03:48 m (CPU), 03:48 m (Wall)] -- 
+Extraction will overlap between 360.521 and 359.522
+This will lead to multiple extraction of the transitions in the overlapping regionwhich will lead to duplicated output. It is very unlikely that you want this.
+Please fix this by providing an appropriate extraction file with -swath_windows_file
+Extraction windows overlap. Will abort (override with -force)
+OpenSwathWorkflow took 04:33 m (wall), 04:16 m (CPU), 10.95 s (system), 04:05 m (user).
+root@f2d0dc8baf00:/data/git/bayesMS/data/datasets/PXD002952/ftp.pride.ebi.ac.uk/pride/data/archive/2016/09/PXD002952/convert/dda/mzml/HeLa_007/crux-output# 
+
+It seems that I should be using swath_windows_file. 
+
+I will try the -force arg as well.
+
+
+root@f2d0dc8baf00:/data/git/bayesMS/data/datasets/PXD002952/ftp.pride.ebi.ac.uk/pride/data/archive/2016/09/PXD002952/convert/dda/mzml/HeLa_007/crux-output# OpenSwathWorkflow -in comet.target.mzML -tr db_assays.TraML -sort_swath_maps -batchSize 1000 -force -out_tsv osw_output.tsv
+
 
 
 
