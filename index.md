@@ -8739,6 +8739,92 @@ I will try the -force arg as well.
 
 root@f2d0dc8baf00:/data/git/bayesMS/data/datasets/PXD002952/ftp.pride.ebi.ac.uk/pride/data/archive/2016/09/PXD002952/convert/dda/mzml/HeLa_007/crux-output# OpenSwathWorkflow -in comet.target.mzML -tr db_assays.TraML -sort_swath_maps -batchSize 1000 -force -out_tsv osw_output.tsv
 
+### 2021-01-22
+
+Another link about running spectrast 
+https://www.biorxiv.org/content/10.1101/2020.01.21.914788v2.full.pdf
+
+How does spectral searching work?
+
+
+How does OpenSWATH work for peptide concentrations?
+
+Today was spent writing about the pipeline in thesis section.
+
+Reading [Griss J. 2015 - Spectral library searching in Proteomics](https://onlinelibrary.wiley.com/doi/full/10.1002/pmic.201500296)
+
+### 2021-01-25
+
+Trying to run .splib --> .mrm --> .TraML file again. I suspect -cI command messed up last spectral library build.
+
+Going through Tenzer paper PXD002952 to check details.
+
+iRT normalization is not needed because same buffer (lösningmedel) is used for all samples and same gradient. I think.. this is found under sample preparation section of the paper.
+
+
+
+(base) ptruong@planck:~/git/bayesMS/data/datasets/PXD002952/ftp.pride.ebi.ac.uk/pride/data/archive/2016/09/PXD002952/convert/dda/mzml/HeLa_007/crux-output$ spectrast -cNpercolator.db -cM percolator.target.splib 
+SpectraST started at Mon Jan 25 15:15:40 2021.
+Creating library from "/home/ptruong/git/bayesMS/data/datasets/PXD002952/ftp.pride.ebi.ac.uk/pride/data/archive/2016/09/PXD002952/convert/dda/mzml/HeLa_007/crux-output/percolator.target.splib" 
+Importing ions...500...1000...1500...2000...2500...3000...3500...4000...4500...5000...5500...6000...DONE!
+
+Library file (BINARY) "percolator.db.splib" created.
+Library file (TEXT) "percolator.db.sptxt" created.
+M/Z Index file "percolator.db.spidx" created.
+Peptide Index file "percolator.db.pepidx" created.
+MRM Table file "percolator.db.mrm" created.
+
+Total number of spectra in library: 6811
+Total number of distinct peptide ions in library: 6375
+Total number of distinct stripped peptides in library: 6342
+
+CHARGE            +1: 0 ; +2: 5055 ; +3: 1756 ; +4: 0 ; +5: 0 ; >+5: 0 ; Unk: 0
+TERMINI           Tryptic: 6811 ; Semi-tryptic: 0 ; Non-tryptic: 0
+PROBABILITY       >0.9999: 109 ; 0.999-0.9999: 789 ; 0.99-0.999: 2448 ; 0.9-0.99: 3464 ; <0.9: 1
+NREPS             20+: 0 ; 10-19: 0 ; 4-9: 0 ; 2-3: 0 ; 1: 6811
+MODIFICATIONS     C,Carbamidomethyl: 938
+
+Total Run Time = 457 seconds.
+SpectraST finished at Mon Jan 25 15:23:17 2021 without error.
+
+(base) ptruong@planck:~/git/bayesMS/data/datasets/PXD002952/ftp.pride.ebi.ac.uk/pride/data/archive/2016/09/PXD002952/convert/dda/mzml/HeLa_007/crux-output$ TargetedFileConverter -in percolator.db.mrm -out percolator.db.TraML
+´Warning: SpectraST was not run in RT normalization mode but the converted list was interpreted to have iRT units. Check whether you need to adapt the parameter -algorithm:retentionTimeInterpretation. You can ignore this warning if you used a legacy SpectraST 4.0 file.
+Progress of 'conversion to internal data representation':
+-- done [took 2.00 s (CPU), 2.01 s (Wall)] -- 
+TargetedFileConverter took 06:28 m (wall), 06:28 m (CPU), 3.04 s (system), 06:25 m (user); Peak Memory Usage: 1485 MB.
+
+Converted file to .TraML and .tsv to check the formating.
+
+To find out which input row is used, we check the values of the .tsv from the converted .splib and compare it to the pep.xml used as input to generate the .splib. Since spectrast spectral library creation should just be a tresholding of the pep.xml file.
+
+#### EXPERIMENT ID. IF PEPTIDE-LEVEL(FDR) or PSM-LEVEL(PEP) probababilities are used for spectrast.
+
+We run the following commands:
+
+spectrast -cP<prob> percolator.target.pep.xml
+spectrast -cNpercolator.db -cM percolator.target.splib
+TargetedFileConverter -in percolator.db.mrm -out percolator.db.tsv
+
+First we run the commands using -cP0.95.
+
+We look at the .tsv file and find a peptide "AAAAAAALQAK". It has the parameters.
+
+percolator_qvalue = 0.00071234
+percolator_PEP = 0.00011322
+peptideprophet_prob = 0.99988678
+
+1-percolator_qvalue = 0.99928766
+1-percolator_PEP = 0.9998867
+
+We run the commands again with treshold 0.9995 and look for "AAAAAAALQAK". If it is there then PSM-level probabilities are used, otherwise peptide-level probabilities are used.
+
+We check the .tsv and find "AAAAAAALQAK", which means PSM-level probabilities are used. Now to double check we find a peptide "AAAEVNQDYGLDPK" which has percolator_PEP = 0.00032544, and therefore 1-percolator_PEP = 0.99967456. 
+
+If we treshold at -cP0.9998, "AAAEVNQDYGLDPK" should be gone from the library .tsv. 
+
+We run the same commands with -cP0.9998 and the .tsv file does not contain the "AAAEVNQDYGLDPK" peptide.
+
+Hence we are using the PEP-probabilities.
 
 
 
