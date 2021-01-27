@@ -8856,7 +8856,17 @@ I try to use msconvert to filter on "msLevel 1" with the following command:
 
 msconvert test_HYE124_TTOF6600_32fix_lgillet_I150211_004_test_sample.mzML --filter "msLevel 1"
 
+### 2021-01-27
 
+Installed new harddrive at lab computer, using GParted to create partition.
+
+https://askubuntu.com/questions/662229/what-partition-table-does-ubuntu-create-by-default
+
+This guide suggests using gpt partition.
+
+Tutorial for gparted:
+
+https://linuxhint.com/gparted_ubuntu/
 
 ```python
 
