@@ -26,7 +26,7 @@ def get_log2FC_ratio_matrix(specie_array):
         FC_ratio = []
         for j in range(10):
             sample_2 = specie_array[j]
-            FC_ratio.append(np.log2(sample_1) - np.log2(sample_2))
+            FC_ratio.append(np.log2(sample_2) - np.log2(sample_1))
         FC_ratios.append(FC_ratio)
     df_FC_ratios = pd.DataFrame(FC_ratios, index = samples, columns = samples)
     return df_FC_ratios

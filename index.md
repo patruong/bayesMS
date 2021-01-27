@@ -8826,6 +8826,36 @@ We run the same commands with -cP0.9998 and the .tsv file does not contain the "
 
 Hence we are using the PEP-probabilities.
 
+#### Generating data to run openSWATH
+
+We run same command as above with -cP0.99.
+
+spectrast -cP0.99 percolator.target.pep.xml
+spectrast -cNpercolator.db -cM percolator.target.splib
+TargetedFileConverter -in percolator.db.mrm -out percolator.db.tsv
+TargetedFileConverter -in percolator.db.mrm -out percolator.db.TraML
+
+### 2021-01-26
+
+Ran openSWATHWorkFlow yesterday... I choose the wrong input (DDA input). I should use the DIA. I will try again and remake.
+
+Also, there should be a file for irt_normalization hroest_DIA_iRT.TraML. I can't find the file in the ProteomeExchange. 
+
+
+OpenSwathWorkflow -in ../test_HYE124_TTOF6600_32fix_lgillet_I150211_004_test_sample.mzML -tr ecolihumanyeast_concat_mayu_IRR_cons_openswath_32w_fixed_curated_decoy.TraML -out_tsv osw_output.tsv -readOptions cacheWorkingInMemory -batchSize 1000 -min_upper_edge_dist 1 -extra_rt_extraction_window 100 -min_rsq 0.95 -min_coverage 0.6 -rt_extraction_window 600 -mz_extraction_window 30 -threads 6 -ppm
+
+Running this command gives the following error. 
+
+Error: Unable to read file (- due to that error of type Parse Error in: /code/OpenMS/src/openms/source/FORMAT/HANDLERS/XMLHandler.cpp@105-void OpenMS::Internal::XMLHandler::fatalError(OpenMS::Internal::XMLHandler::ActionMode, const OpenMS::String&, OpenMS::UInt, OpenMS::UInt) const)
+
+According to https://github.com/nf-core/mhcquant/issues/91
+
+This is some c++ internal error. And It could be fixed by peak_ms_level 1 or other centroiding algorithm.
+
+I try to use msconvert to filter on "msLevel 1" with the following command:
+
+msconvert test_HYE124_TTOF6600_32fix_lgillet_I150211_004_test_sample.mzML --filter "msLevel 1"
+
 
 
 ```python

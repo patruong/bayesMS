@@ -111,61 +111,244 @@ get_ratios_from_normalized_melted_df(df_triq, "CAEEL")
 
 # Compute True FC on samples
 
-
-def get_log2FC_ratio_matrix(specie_array):
-    """
-    Inpur specie array with mixture ratios, and generate log2FC matrix.
-    """
-    samples = ["S0"+str(i) for i in range(1,10)] + ["S10"] 
-    FC_ratios = []
-    for i in range(10):
-        sample_1 = specie_array[i]
-        FC_ratio = []
-        for j in range(10):
-            sample_2 = specie_array[j]
-            FC_ratio.append(np.log2(sample_1) - np.log2(sample_2))
-        FC_ratios.append(FC_ratio)
-    df_FC_ratios = pd.DataFrame(FC_ratios, index = samples, columns = samples)
-    return df_FC_ratios
-
-def get_log2FC_ratio_matrices():
-    ARATH = np.array([0.5,  0.5,  0.5,  0.5,  0.5, 0.5, 0.5, 0.5, 0.5, 0.5])
-    CAEEL = np.array([ 0.5,  0.25,  0.125,  0.0625,  0.031,  0.0155, 0.008,  0.004,  0.002,  0.000001])
-    HUMAN = np.array([ 00.000001,  0.25, 0.375,  0.4375,  0.469,  0.4845,  0.492, 0.496, 0.498,  0.5])
-    
-    ARATH_FC_matrix = get_log2FC_ratio_matrix(ARATH)
-    CAEEL_FC_matrix = get_log2FC_ratio_matrix(CAEEL)
-    HUMAN_FC_matrix = get_log2FC_ratio_matrix(HUMAN)
-    return ARATH_FC_matrix, CAEEL_FC_matrix, HUMAN_FC_matrix
+from constants import get_sample_ratios, get_log2FC_ratio_matrix, get_log2FC_ratio_matrices
 
 
 ARATH_FC_matrix, CAEEL_FC_matrix, HUMAN_FC_matrix = get_log2FC_ratio_matrices()
     
 # Computing FC diff-exp for triq and spec
-samples = ["S0"+str(i) for i in range(1,10)] + ["S10"] 
 
-df = triq #variable
-df = spec #variable
+from extract_from_melt import get_protein_abundance, get_proteins
+
+proteins = get_proteins(spec, "HUMAN") #FUNC TEST
+proteins = get_proteins(triq, "HUMAN") #FUNC TEST
+get_protein_abundance(triq, "S01", "HUMAN", protein) #FUNC TEST
+
+samples = ["S0"+str(i) for i in range(1,10)] + ["S10"] 
+species = ["ARATH", "CAEEL", "HUMAN"]
+
+df = df_triq #variable
+df = df_spec #variable
 
 sample = samples[0] #Variable
 specie = "HUMAN" #variable
-
-df_sample = df[df["sample"] == sample]
-df_sample_specie = df_sample[df_sample["specie"] == specie]
-
-proteins = df_sample_specie.protein.unique()
+protein = "Q8TBA6_HUMAN" #VAR
 
 protein = proteins[0] #iteration variable (if the protein is diff exp)
-
-df_sample_specie_protein = df_sample_specie[df_sample_specie["protein"] == protein].value
-
-
+    
+get_protein_abundance(triq, "S01", "HUMAN", protein) #FUNC TEST
 
 
+#for protein in proteins:
+#    for sample1 in samples:
+#        abundance1 = get_protein_abundance(df, sample1, specie, protein)
+#        for sample2 in samples:
+#            abundance2 = get_protein_abundance(df, sample2, specie, protein)
+            
+#log2FC = np.log2(abundance1.values) - np.log2(abundance2.values)            
+import time
+start = time.time()
 
+sample1 = "S02" #Var
+sample2 = "S06" #Var
+specie = "HUMAN" #Var
+protein = proteins[0] #Var
+
+log2FC_array = []
+for protein in proteins:
+    abundance_sample1 = get_protein_abundance(df, sample1, specie, protein)
+    abundance_sample2 = get_protein_abundance(df, sample2, specie, protein)
+    log2FC = np.log2(abundance_sample2) - np.log2(abundance_sample1)
+    log2FC_array.append(log2FC)
+
+end = time.time()
+print(end-start)
+
+# Process takes 15min
+
+
+# Code to see that same proteins can have different indices
+df_specie = df[df["specie"] == "HUMAN"]
+df_specie_sample = df_specie[df_specie["sample"] == "S06"]
+df_specie_sample = df_specie[df_specie["sample"] == "S02"]
+df_specie_sample_protein = df_specie_sample[df_specie_sample["protein"] == protein]
+
+from math import sqrt
+test= []
+for i in range(10):
+    test.append(sqrt(i**2))
+
+from math import sqrt
+from joblib import Parallel, delayed
+test2 = Parallel(n_jobs=2)(delayed(sqrt)(i ** 2) for i in range(10))
+
+g = "g"
+def get_val(x,g):
+    return str(x)+str("_tetst")+str(g)
+
+
+# write about this timing thingy here... wierd...
+start=time.time()
+test3 = Parallel(n_jobs=1)(delayed(get_val)(i,g) for i in ["a","b","c","d","e","b","c","d","e","b","c","d","e"])
+end=time.time()
+print(end-start)
+
+
+# delayed(func)(parameter to func)
+
+#### Make a function for abundance computations
+
+def parallel_get_protein(df, protein, sample1, sample2, specie):
+    abundance_sample1 = get_protein_abundance(df, sample1, specie, protein)
+    abundance_sample2 = get_protein_abundance(df, sample2, specie, protein)
+    log2FC = np.log2(abundance_sample2.values) - np.log2(abundance_sample1.values)
+    return log2FC
+
+import multiprocessing
+num_cores = multiprocessing.cpu_count()
+
+
+sample1 = "S02" #VAR
+sample2 = "S06" #VAR
+specie = "HUMAN" #VAR
+df = spec #VAR
+
+
+
+
+from log2fc_from_melt import get_log2FC_matrix 
+
+df_log2FC = pd.DataFrame(log2FC_array, index=proteins, columns=runs).to_csv("spec_log2FC_S02_S06_HUMAN.csv", sep = "\t", index=False)
+# Run this when we are at gym - Non-normalized but log2FC...
+    
+spec_log2FC_S02_S06_HUMAN.csv
+
+print(1)
+df_log2FC = get_log2FC_matrix(triq, "S02", "S06", "HUMAN")
+df_log2FC.to_csv("triq_log2FC_S02_S06_HUMAN.csv", sep = "\t", index=False)
+print(2)
+df_log2FC = get_log2FC_matrix(triq, "S02", "S06", "CAEEL")
+df_log2FC.to_csv("troq_log2FC_S02_S06_CAEEL.csv", sep = "\t", index=False)
+print(3)
+df_log2FC = get_log2FC_matrix(triq, "S02", "S06", "ARATH")
+df_log2FC.to_csv("troq_log2FC_S02_S06_ARATH.csv", sep = "\t", index=False)
+print(4)
+df_log2FC = get_log2FC_matrix(spec, "S02", "S06", "CAEEL")
+df_log2FC.to_csv("spec_log2FC_S02_S06_CAEEL.csv", sep = "\t", index=False)
+print(5)
+df_log2FC = get_log2FC_matrix(spec, "S02", "S06", "ARATH")
+df_log2FC.to_csv("spec_log2FC_S02_S06_ARATH.csv", sep = "\t", index=False)
+
+print(6)
+df_log2FC = get_log2FC_matrix(triq, "S03", "S04", "HUMAN")
+df_log2FC.to_csv("triq_log2FC_S03_S04_HUMAN.csv", sep = "\t", index=False)
+print(7)
+df_log2FC = get_log2FC_matrix(triq, "S03", "S04", "CAEEL")
+df_log2FC.to_csv("triq_log2FC_S03_S04_CAEEL.csv", sep = "\t", index=False)
+print(8)
+df_log2FC = get_log2FC_matrix(triq, "S03", "S04", "ARATH")
+df_log2FC.to_csv("triq_log2FC_S03_S04_ARATH.csv", sep = "\t", index=False)
+print(9)
+df_log2FC = get_log2FC_matrix(spec, "S03", "S04", "HUMAN")
+df_log2FC.to_csv("spec_log2FC_S03_S04_HUMAN.csv", sep = "\t", index=False)
+print(10)
+df_log2FC = get_log2FC_matrix(spec, "S03", "S04", "CAEEL")
+df_log2FC.to_csv("spec_log2FC_S03_S04_CAEEL.csv", sep = "\t", index=False)
+print(11)
+df_log2FC = get_log2FC_matrix(spec, "S03", "S04", "ARATH")
+df_log2FC.to_csv("spec_log2FC_S03_S04_ARATH.csv", sep = "\t", index=False)
+
+print(12)
+df_log2FC = get_log2FC_matrix(triq, "S05", "S08", "HUMAN")
+df_log2FC.to_csv("triq_log2FC_S05_S08_HUMAN.csv", sep = "\t", index=False)
+print(13)
+df_log2FC = get_log2FC_matrix(triq, "S05", "S08", "CAEEL")
+df_log2FC.to_csv("triq_log2FC_S05_S08_CAEEL.csv", sep = "\t", index=False)
+print(14)
+df_log2FC = get_log2FC_matrix(triq, "S05", "S08", "ARATH")
+df_log2FC.to_csv("triq_log2FC_S05_S08_ARATH.csv", sep = "\t", index=False)
+print(15)
+df_log2FC = get_log2FC_matrix(spec, "S05", "S08", "HUMAN")
+df_log2FC.to_csv("spec_log2FC_S05_S08_HUMAN.csv", sep = "\t", index=False)
+print(16)
+df_log2FC = get_log2FC_matrix(spec, "S05", "S08", "CAEEL")
+df_log2FC.to_csv("spec_log2FC_S05_S08_CAEEL.csv", sep = "\t", index=False)
+print(17)
+df_log2FC = get_log2FC_matrix(spec, "S05", "S08", "ARATH")
+df_log2FC.to_csv("spec_log2FC_S05_S08_ARATH.csv", sep = "\t", index=False)
+print(18)
+df_log2FC = get_log2FC_matrix(triq, "S04", "S09", "HUMAN")
+df_log2FC.to_csv("triq_log2FC_S04_S09_HUMAN.csv", sep = "\t", index=False)
+print(19)
+df_log2FC = get_log2FC_matrix(triq, "S04", "S09", "CAEEL")
+df_log2FC.to_csv("triq_log2FC_S04_S09_CAEEL.csv", sep = "\t", index=False)
+print(20)
+df_log2FC = get_log2FC_matrix(triq, "S04", "S09", "ARATH")
+df_log2FC.to_csv("triq_log2FC_S04_S09_ARATH.csv", sep = "\t", index=False)
+print(21)
+df_log2FC = get_log2FC_matrix(spec, "S04", "S09", "HUMAN")
+df_log2FC.to_csv("spec_log2FC_S04_S09_HUMAN.csv", sep = "\t", index=False)
+print(22)
+df_log2FC = get_log2FC_matrix(spec, "S04", "S09", "CAEEL")
+df_log2FC.to_csv("spec_log2FC_S04_S09_CAEEL.csv", sep = "\t", index=False)
+print(23)
+df_log2FC = get_log2FC_matrix(spec, "S04", "S09", "ARATH")
+df_log2FC.to_csv("spec_log2FC_S04_S09_ARATH.csv", sep = "\t", index=False)
+print("DONE!)
+
+#try the pool approach
+
+start=time.time()
+log2FC_array_ = Parallel(n_jobs=num_cores)(delayed(parallel_get_protein)(df, protein, sample1, sample2, specie) for protein in proteins)
+end=time.time()
+print(time.time())
+
+
+
+
+
+
+# compute differential expression of the log2FC dataframes.
+
+ARATH_FC_matrix, CAEEL_FC_matrix, HUMAN_FC_matrix = get_log2FC_ratio_matrices()
+ARATH_FC_matrix
+CAEEL_FC_matrix
+
+
+
+HUMAN_FC_matrix["S06"]["S02"]
+spec_log2FC = pd.read_csv("spec_log2FC_S02_S06_HUMAN.csv", sep = "\t")
+triq_log2FC = pd.read_csv("triq_log2FC_S02_S06_HUMAN.csv", sep = "\t")
+
+method = "triq" # VAR
+sample1 = "S02" # VAR
+sample2 = "S06" # VAR
+specie = "HUMAN" # VAR
+ratio = 0.8 # VAR - ratio for what is considered diff. exp.
+two_sided = False # VAR - is this needed? I will skip this for now
+
+
+
+method = "triq" # VAR
+sample1 = "S02" # VAR
+sample2 = "S06" # VAR
+specie = "HUMAN" # VAR
+ratio = 0.8 # VAR - ratio for what is considered diff. exp.
+two_sided = False # VAR - is this needed? I will skip this for now
+
+from log2fc_from_melt_computation import get_differentially_expressed_proteins_from_log2FC_df
+
+
+np.sum(get_differentially_expressed_proteins_from_log2FC_df("triq", "S02", "S06", "HUMAN", 0.8))
+np.sum(get_differentially_expressed_proteins_from_log2FC_df("spec", "S02", "S06", "HUMAN", 0.8))
+
+np.sum(get_differentially_expressed_proteins_from_log2FC_df("triq", "S02", "S06", "ARATH", 0.8))
+np.sum(get_differentially_expressed_proteins_from_log2FC_df("spec", "S02", "S06", "ARATH", 0.8))
+
+np.sum(get_differentially_expressed_proteins_from_log2FC_df("triq", "S02", "S06", "CAEEL", 0.8))
+np.sum(get_differentially_expressed_proteins_from_log2FC_df("spec", "S02", "S06", "CAEEL", 0.8))
 
 # Compute similar thing for proteinXvsY.csv - the posterior diff exp.
-
 
 
 
