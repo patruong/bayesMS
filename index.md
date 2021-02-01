@@ -8868,6 +8868,17 @@ Tutorial for gparted:
 
 https://linuxhint.com/gparted_ubuntu/
 
+ToDo before bedtime:
+- convert all .wiff files to .mzml in hdd_14T.
+- perform a spectral library run of openMS.
+- check the osw_tsv.csv output data.
+- check TRIC
+
+Added shared folder for virtualBox and started process for converting all .wiff files for .mzml.
+
+
+
+
 ```python
 
 ```
